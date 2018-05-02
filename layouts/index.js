@@ -1,17 +1,16 @@
 import React from 'react';
-import { View } from 'react-native';
+
+import styled from 'styled-components';
 
 const ScreenLayout = ({ children }) => (
-  <View
-    style={{
-      alignItems: 'center',
-      flex: 1,
-      justifyContent: 'center',
-      paddingTop: 40
-    }}
-  >
-    {children}
-  </View>
+  <ScreenContainer>{children}</ScreenContainer>
 );
 
 export default ScreenLayout;
+
+const ScreenContainer = styled.View`
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+  padding-top: 40;
+`;
