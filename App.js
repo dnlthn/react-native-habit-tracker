@@ -1,12 +1,9 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import { TabNavigator } from 'react-navigation';
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <View>
-        <Text>Cleaned Template</Text>
-      </View>
-    );
-  }
-}
+import HabitScreen from './screens/habits';
+import HistoryScreen from './screens/history';
+
+export default TabNavigator({
+  Habits: { screen: HabitScreen },
+  History: { screen: HistoryScreen }
+});
