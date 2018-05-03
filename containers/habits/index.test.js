@@ -26,3 +26,23 @@ it('adds a new habit with the addHabit function', done => {
     done();
   });
 });
+it('removes the habit when only 1 exists', done => {
+  const habitsContainer = new HabitsContainer();
+  const newHabit = {
+    frequency: 'DAILY',
+    timesPerDay: 1,
+    title: 'First Habit!',
+  };
+  habitsContainer.addHabit(newHabit);
+
+  defer(() => {
+    habitsContainer.removeHabit(0);
+    defer(() => {
+      const { habits } = habitsContainer.state;
+
+      expect(habits).toHaveLength(0);
+      expect(habits).toEqual([]);
+      done();
+    });
+  });
+});
