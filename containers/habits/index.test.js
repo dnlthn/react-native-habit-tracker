@@ -7,13 +7,13 @@ const generateHabits = numberOfHabits => {
     frequency: 'DAILY',
     status: 'ACTIVE',
     timesPerDay: 1,
-    timesRemainingToday: 1,
     title: 'First Habit!',
   };
 
   return [...Array(numberOfHabits).keys()].map(index => ({
     ...baseHabit,
     id: index,
+    timesRemainingToday: index,
   }));
 };
 
@@ -98,6 +98,35 @@ it('removes the last habit when there is more than 1', done => {
 
     expect(habits).toHaveLength(2);
     expect(habits.includes(habit => habit.id === 0)).toBeFalsy();
+    done();
+  });
+});
+
+it('updates the status to completed with the habit no longer needs to be performed today', done => {
+  const habitsContainer = new HabitsContainer({ habits: generateHabits(3) });
+
+  const targetHabit = 2;
+  habitsContainer.performHabit(targetHabit);
+  defer(() => {
+    const { habits } = habitsContainer.state;
+    const { timesRemainingToday, status } = habits[targetHabit];
+
+    expect(timesRemainingToday).toEqual(1);
+    expect(status).toEqual('ACTIVE');
+    done();
+  });
+});
+
+it('updates the status to completed with the habit no longer needs to be performed today', done => {
+  const habitsContainer = new HabitsContainer({ habits: generateHabits(3) });
+
+  const targetHabit = 1;
+  habitsContainer.performHabit(targetHabit);
+  defer(() => {
+    const { habits } = habitsContainer.state;
+    const { status } = habits[targetHabit];
+
+    expect(status).toEqual('COMPLETED');
     done();
   });
 });
