@@ -1,8 +1,13 @@
 import { Container } from 'unstated';
 
-class HabitsContainer extends Container {
-  habitId = 0;
+let habitId = 0;
+const STATUS = {
+  ACTIVE: 'active',
+  INACTIVE: 'inactive',
+  COMPLETED: 'completed',
+};
 
+class HabitsContainer extends Container {
   constructor(props = {}) {
     super(props);
 
@@ -18,14 +23,14 @@ class HabitsContainer extends Container {
       ...this.state.habits,
       {
         frequency,
-        id: this.habitId,
-        status: 'ACTIVE',
+        id: habitId,
+        status: STATUS.ACTIVE,
         timesPerDay,
         timesRemainingToday: timesPerDay,
         title,
       },
     ];
-    this.habitId = this.habitId + 1;
+    habitId = habitId + 1;
 
     this.setState({ habits: nextState });
   };
@@ -44,7 +49,7 @@ class HabitsContainer extends Container {
         return {
           ...habit,
           timesRemainingToday,
-          status: timesRemainingToday === 0 ? 'COMPLETED' : habit.status,
+          status: timesRemainingToday === 0 ? STATUS.COMPLETED : habit.status,
         };
       } else {
         return habit;

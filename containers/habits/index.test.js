@@ -5,7 +5,7 @@ import HabitsContainer from './index';
 const generateHabits = numberOfHabits => {
   const baseHabit = {
     frequency: 'DAILY',
-    status: 'ACTIVE',
+    status: 'active',
     timesPerDay: 1,
     title: 'First Habit!',
   };
@@ -112,7 +112,7 @@ it('updates the status to completed with the habit no longer needs to be perform
     const { timesRemainingToday, status } = habits[targetHabit];
 
     expect(timesRemainingToday).toEqual(1);
-    expect(status).toEqual('ACTIVE');
+    expect(status).toEqual('active');
     done();
   });
 });
@@ -126,7 +126,7 @@ it('updates the status to completed with the habit no longer needs to be perform
     const { habits } = habitsContainer.state;
     const { status } = habits[targetHabit];
 
-    expect(status).toEqual('COMPLETED');
+    expect(status).toEqual('completed');
     done();
   });
 });
