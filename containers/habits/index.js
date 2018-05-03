@@ -22,6 +22,12 @@ class HabitsContainer extends Container {
 
     this.setState({ habits: nextState });
   };
+
+  removeHabit = id => {
+    const nextState = this.state.habits.filter(habit => habit.id !== id);
+
+    this.setState({ habits: nextState });
+  };
 }
 
 export default HabitsContainer;
