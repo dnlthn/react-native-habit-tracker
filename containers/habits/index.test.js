@@ -67,5 +67,42 @@ it('removes the habit when only 1 exists', done => {
     done();
   });
 });
+
+it('removes the first habit when there is more than 1', done => {
+  const habitsContainer = new HabitsContainer({ habits: generateHabits(3) });
+
+  habitsContainer.removeHabit(0);
+  defer(() => {
+    const { habits } = habitsContainer.state;
+
+    expect(habits).toHaveLength(2);
+    expect(habits.includes(habit => habit.id === 0)).toBeFalsy();
+    done();
+  });
+});
+
+it('removes the middle habit when there is more than 2', done => {
+  const habitsContainer = new HabitsContainer({ habits: generateHabits(3) });
+
+  habitsContainer.removeHabit(1);
+  defer(() => {
+    const { habits } = habitsContainer.state;
+
+    expect(habits).toHaveLength(2);
+    expect(habits.includes(habit => habit.id === 0)).toBeFalsy();
+    done();
+  });
+});
+
+it('removes the last habit when there is more than 1', done => {
+  const habitsContainer = new HabitsContainer({ habits: generateHabits(3) });
+
+  habitsContainer.removeHabit(2);
+  defer(() => {
+    const { habits } = habitsContainer.state;
+
+    expect(habits).toHaveLength(2);
+    expect(habits.includes(habit => habit.id === 0)).toBeFalsy();
+    done();
   });
 });
