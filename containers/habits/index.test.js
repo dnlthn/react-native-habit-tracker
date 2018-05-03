@@ -16,6 +16,7 @@ const generateHabits = numberOfHabits => {
     id: index,
   }));
 };
+
 it('returns an empty array for the default value', () => {
   const habitsContainer = new HabitsContainer();
   const { habits } = habitsContainer.state;
@@ -31,13 +32,6 @@ it('returns the correct initial value', () => {
 
   expect(habits).toMatchObject(generatedHabits);
 });
-
-// it('initial value from prop is set correctly', () => {
-//   const counter = new HabitsContainer({
-//     initialCount: 3,
-//   });
-//   expect(counter.state.count).toEqual(3);
-// });
 
 it('adds a new habit with the addHabit function', done => {
   const habitsContainer = new HabitsContainer();
@@ -55,6 +49,7 @@ it('adds a new habit with the addHabit function', done => {
     done();
   });
 });
+
 it('removes the habit when only 1 exists', done => {
   const habitsContainer = new HabitsContainer({ habits: generateHabits(1) });
 
