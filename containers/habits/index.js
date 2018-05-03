@@ -2,9 +2,16 @@ import { Container } from 'unstated';
 
 class HabitsContainer extends Container {
   habitId = 0;
-  state = {
-    habits: [],
-  };
+
+  constructor(props = {}) {
+    super(props);
+
+    this.state = {
+      habits: props.habits || [],
+    };
+  }
+
+  state = {};
 
   addHabit = ({ title, frequency, timesPerDay }) => {
     const nextState = [
