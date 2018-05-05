@@ -39,7 +39,7 @@ it('returns the correct initial value', () => {
   expect(habits).toMatchObject(generatedHabits);
 });
 
-it('adds a new habit with the addHabit function', done => {
+it('adds a new habit with the addHabit function when there are not any habits', done => {
   const habitsContainer = new HabitsContainer();
   const newHabit = {
     frequency: 'DAILY',
@@ -50,9 +50,31 @@ it('adds a new habit with the addHabit function', done => {
 
   defer(() => {
     const { habits } = habitsContainer.state;
+    const numberOfHabits = Object.keys(habits).length;
 
-    expect(habits).toHaveLength(1);
+    expect(numberOfHabits).toEqual(1);
     done();
+  });
+});
+
+it('adds a new habit with the addHabit function when there is more than 1 habit', done => {
+  const habitsContainer = new HabitsContainer();
+  const newHabit = {
+    frequency: 'DAILY',
+    timesPerDay: 1,
+    title: 'First Habit!',
+  };
+  habitsContainer.addHabit(newHabit);
+
+  defer(() => {
+    habitsContainer.addHabit(newHabit);
+    defer(() => {
+      const { habits } = habitsContainer.state;
+      const numberOfHabits = Object.keys(habits).length;
+
+      expect(numberOfHabits).toEqual(2);
+      done();
+    });
   });
 });
 
