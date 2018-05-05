@@ -84,48 +84,24 @@ it('removes the habit when only 1 exists', done => {
   habitsContainer.removeHabit(0);
   defer(() => {
     const { habits } = habitsContainer.state;
+    const numberOfHabits = Object.keys(habits).length;
 
-    expect(habits).toHaveLength(0);
-    expect(habits).toEqual([]);
+    expect(numberOfHabits).toEqual(0);
+    expect(habits).toEqual({});
     done();
   });
 });
 
-it('removes the first habit when there is more than 1', done => {
-  const habitsContainer = new HabitsContainer({ habits: generateHabits(3) });
-
-  habitsContainer.removeHabit(0);
-  defer(() => {
-    const { habits } = habitsContainer.state;
-
-    expect(habits).toHaveLength(2);
-    expect(habits.includes(habit => habit.id === 0)).toBeFalsy();
-    done();
-  });
-});
-
-it('removes the middle habit when there is more than 2', done => {
+it('remove a habit when there is more than 1', done => {
   const habitsContainer = new HabitsContainer({ habits: generateHabits(3) });
 
   habitsContainer.removeHabit(1);
   defer(() => {
     const { habits } = habitsContainer.state;
+    const numberOfHabits = Object.keys(habits).length;
 
-    expect(habits).toHaveLength(2);
-    expect(habits.includes(habit => habit.id === 0)).toBeFalsy();
-    done();
-  });
-});
-
-it('removes the last habit when there is more than 1', done => {
-  const habitsContainer = new HabitsContainer({ habits: generateHabits(3) });
-
-  habitsContainer.removeHabit(2);
-  defer(() => {
-    const { habits } = habitsContainer.state;
-
-    expect(habits).toHaveLength(2);
-    expect(habits.includes(habit => habit.id === 0)).toBeFalsy();
+    expect(numberOfHabits).toEqual(2);
+    expect(habits[1]).toBeUndefined();
     done();
   });
 });
