@@ -23,12 +23,13 @@ const generateHabits = numberOfHabits => {
   );
 };
 
-it('returns an empty array for the default value', () => {
+it('returns an empty object for the default value', () => {
   const habitsContainer = new HabitsContainer();
   const { habits } = habitsContainer.state;
+  const numberOfHabits = Object.keys(habits).length;
 
-  expect(habits).toHaveLength(0);
-  expect(habits).toEqual([]);
+  expect(numberOfHabits).toEqual(0);
+  expect(habits).toEqual({});
 });
 
 it('returns the correct initial value', () => {
