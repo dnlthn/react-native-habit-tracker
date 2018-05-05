@@ -40,19 +40,18 @@ class HabitsContainer extends Container {
   };
 
   performHabit = id => {
-    const nextState = this.state.habits.map(habit => {
-      if (habit.id === id) {
-        const timesRemainingToday = habit.timesRemainingToday - 1;
+    const habit = this.state.habits[id];
+    const timesRemainingToday = habit.timesRemainingToday - 1;
 
-        return {
-          ...habit,
-          timesRemainingToday,
-          status: timesRemainingToday === 0 ? STATUS.COMPLETED : habit.status,
-        };
-      } else {
-        return habit;
-      }
-    });
+    const nextState = {
+      ...this.state.habits,
+
+      [id]: {
+        ...habit,
+        timesRemainingToday,
+        status: timesRemainingToday === 0 ? STATUS.COMPLETED : habit.status,
+      },
+    };
 
     this.setState({ habits: nextState });
   };
