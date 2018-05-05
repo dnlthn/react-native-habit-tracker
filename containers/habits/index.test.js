@@ -7,14 +7,20 @@ const generateHabits = numberOfHabits => {
     frequency: 'DAILY',
     status: 'active',
     timesPerDay: 1,
-    title: 'First Habit!',
   };
 
-  return [...Array(numberOfHabits).keys()].map(index => ({
-    ...baseHabit,
-    id: index,
-    timesRemainingToday: index,
-  }));
+  return [...Array(numberOfHabits).keys()].reduce(
+    (habits, key) => ({
+      ...habits,
+      [key]: {
+        ...baseHabit,
+        id: key,
+        timesRemainingToday: key,
+        title: `Habit #${key}`,
+      },
+    }),
+    {},
+  );
 };
 
 it('returns an empty array for the default value', () => {
