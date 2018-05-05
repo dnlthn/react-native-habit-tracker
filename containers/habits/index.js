@@ -17,17 +17,16 @@ class HabitsContainer extends Container {
   }
 
   addHabit = ({ title, frequency, timesPerDay }) => {
-    const nextState = [
+    const nextState = {
       ...this.state.habits,
-      {
+      [habitId]: {
         frequency,
-        id: habitId,
         status: STATUS.ACTIVE,
         timesPerDay,
         timesRemainingToday: timesPerDay,
         title,
       },
-    ];
+    };
     habitId = habitId + 1;
 
     this.setState({ habits: nextState });
