@@ -19,6 +19,7 @@ class HabitsContainer extends Container {
   addHabit = ({ title, frequency, timesPerDay }) => {
     const nextState = {
       ...this.state.habits,
+
       [habitId]: {
         frequency,
         status: STATUS.ACTIVE,
@@ -33,7 +34,7 @@ class HabitsContainer extends Container {
   };
 
   removeHabit = id => {
-    const nextState = this.state.habits.filter(habit => habit.id !== id);
+    const { [String(id)]: _, ...nextState } = this.state.habits;
 
     this.setState({ habits: nextState });
   };
