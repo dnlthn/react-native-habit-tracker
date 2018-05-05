@@ -14,7 +14,6 @@ const generateHabits = numberOfHabits => {
       ...habits,
       [key]: {
         ...baseHabit,
-        id: key,
         timesRemainingToday: key,
         title: `Habit #${key}`,
       },
