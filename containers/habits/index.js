@@ -12,11 +12,9 @@ class HabitsContainer extends Container {
     super(props);
 
     this.state = {
-      habits: props.habits || [],
+      habits: props.habits || {},
     };
   }
-
-  state = {};
 
   addHabit = ({ title, frequency, timesPerDay }) => {
     const nextState = [
