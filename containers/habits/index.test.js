@@ -1,11 +1,12 @@
 import defer from 'tickedoff';
 
+import { STATUS } from './constants';
 import HabitsContainer from './index';
 
 const generateHabits = numberOfHabits => {
   const baseHabit = {
     frequency: 'DAILY',
-    status: 'active',
+    status: STATUS.ACTIVE,
     timesPerDay: 1,
   };
 
@@ -116,7 +117,7 @@ it('updates the status to completed with the habit no longer needs to be perform
     const { timesRemainingToday, status } = habits[targetHabit];
 
     expect(timesRemainingToday).toEqual(1);
-    expect(status).toEqual('active');
+    expect(status).toEqual(STATUS.ACTIVE);
     done();
   });
 });
@@ -130,7 +131,7 @@ it('updates the status to completed with the habit no longer needs to be perform
     const { habits } = habitsContainer.state;
     const { status } = habits[targetHabit];
 
-    expect(status).toEqual('completed');
+    expect(status).toEqual(STATUS.COMPLETED);
     done();
   });
 });
