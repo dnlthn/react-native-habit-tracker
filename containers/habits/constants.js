@@ -1,6 +1,6 @@
 export const FILTERS = {
   ACTIVE: 'active',
-  COMPLETED: 'completed',
+  HISTORY: 'history',
 };
 
 export const STATUS = {
