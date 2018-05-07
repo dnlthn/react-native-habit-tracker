@@ -9,7 +9,7 @@ A minimal habit tracker built in React Native.
 
 Yarn will prompt you to choose between Expo, an iOS emulator, or Android emulator.
 
-All data is saved locally so there is requests to an outside data source.
+All data is saved locally so there are not any requests to an outside data source.
 
 ## License
 
