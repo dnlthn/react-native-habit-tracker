@@ -1,7 +1,20 @@
 import { Container } from 'unstated';
-import { STATUS } from './constants';
 
 let _newHabitId = 0;
+const _iterableFromIds = (ids, state) =>
+  Object.keys(ids).map(id => {
+    const timesRemainingToday = state.active[id]
+      ? state.active[id].timesRemainingToday
+      : 0;
+    const completed = state.history[id] ? state.history[id].completed : [];
+
+    return {
+      ...state.habits[id],
+      completed,
+      id,
+      timesRemainingToday,
+    };
+  });
 
 class HabitsContainer extends Container {
   constructor(props = {}) {
@@ -9,8 +22,8 @@ class HabitsContainer extends Container {
 
     this.state = {
       habits: props.habits || {},
-      [STATUS.ACTIVE]: props[STATUS.ACTIVE] || {},
-      [STATUS.HISTORY]: props[STATUS.HISTORY] || {},
+      active: props.active || {},
+      history: props.history || {},
     };
   }
 
@@ -26,7 +39,7 @@ class HabitsContainer extends Container {
     };
 
     const nextActiveState = {
-      ...this.state[STATUS.ACTIVE],
+      ...this.state.active,
 
       [_newHabitId]: {
         timesRemainingToday: timesPerDay,
@@ -37,7 +50,7 @@ class HabitsContainer extends Container {
 
     this.setState({
       habits: nextHabitState,
-      [STATUS.ACTIVE]: nextActiveState,
+      active: nextActiveState,
     });
   };
 
@@ -47,35 +60,49 @@ class HabitsContainer extends Container {
       ...nextHabitState
     } = this.state.habits;
 
-    const { [String(id)]: _removedActive, ...nextActiveState } = this.state[
-      STATUS.ACTIVE
-    ];
+    const {
+      [String(id)]: _removedActive,
+      ...nextActiveState
+    } = this.state.active;
 
-    const { [String(id)]: _removedHistory, ...nextHistoryState } = this.state[
-      STATUS.HISTORY
-    ];
+    const {
+      [String(id)]: _removedHistory,
+      ...nextHistoryState
+    } = this.state.history;
 
     this.setState({
       habits: nextHabitState,
-      [STATUS.ACTIVE]: nextActiveState,
-      [STATUS.HISTORY]: nextHistoryState,
+      active: nextActiveState,
+      history: nextHistoryState,
     });
   };
 
   perform = id => {
-    if (!this.state[STATUS.ACTIVE][id]) return;
+    if (!this.state.active[id]) return;
 
-    const habit = this.state[STATUS.ACTIVE][id];
+    const habit = this.state.active[id];
     const timesRemainingToday = habit.timesRemainingToday - 1;
 
-    if (timesRemainingToday === 0) {
-      const { [String(id)]: _removedActive, ...nextActiveState } = this.state[
-        STATUS.ACTIVE
-      ];
+    if (timesRemainingToday > 0) {
+      const nextState = {
+        ...this.state.active,
 
-      const habit_history = this.state[STATUS.HISTORY][id];
+        [id]: {
+          ...habit,
+          timesRemainingToday,
+        },
+      };
+
+      this.setState({ active: nextState });
+    } else {
+      const {
+        [String(id)]: _removedActive,
+        ...nextActiveState
+      } = this.state.active;
+
+      const habit_history = this.state.history[id];
       const nextHistoryState = {
-        ...this.state[STATUS.HISTORY],
+        ...this.state.history,
 
         [id]: {
           completed: habit_history
@@ -85,54 +112,21 @@ class HabitsContainer extends Container {
       };
 
       this.setState({
-        [STATUS.ACTIVE]: nextActiveState,
-        [STATUS.HISTORY]: nextHistoryState,
+        active: nextActiveState,
+        history: nextHistoryState,
       });
-    } else {
-      const nextState = {
-        ...this.state[STATUS.ACTIVE],
-
-        [id]: {
-          ...habit,
-          timesRemainingToday,
-        },
-      };
-
-      this.setState({ [STATUS.ACTIVE]: nextState });
     }
   };
 
   getHistory = id =>
     this.state.history[id] ? this.state.history[id].completed : [];
 
-  getIterable = ({ filter }) => {
-    const filterProperties = id => {
-      switch (filter) {
-        case STATUS.ACTIVE:
-          return {
-            timesRemainingToday: this.state[STATUS.ACTIVE][id]
-              .timesRemainingToday,
-          };
-
-        case STATUS.HISTORY:
-          return {
-            completed: this.state[STATUS.HISTORY][id].completed,
-          };
-
-        default:
-          return {};
-      }
-    };
-
-    return Object.keys(this.state[filter]).map(id => ({
-      ...this.state.habits[id],
-      ...filterProperties(id),
-      id,
-    }));
-  };
+  getActiveIterable = () => _iterableFromIds(this.state.active, this.state);
+  getHabitsIterable = () => _iterableFromIds(this.state.habits, this.state);
+  getHistoryIterable = () => _iterableFromIds(this.state.history, this.state);
 
   updateActive = () => {
-    const nextHistoryState = Object.keys(this.state[STATUS.ACTIVE]).reduce(
+    const nextHistoryState = Object.keys(this.state.active).reduce(
       (history, id) => ({
         ...history,
         [id]: {
@@ -142,7 +136,7 @@ class HabitsContainer extends Container {
       this.state.history,
     );
 
-    const nextActiveState = this.getIterable({ filter: 'habits' }).reduce(
+    const nextActiveState = this.getHabitsIterable().reduce(
       (habits, { id, timesPerDay }) => ({
         ...habits,
         [id]: {

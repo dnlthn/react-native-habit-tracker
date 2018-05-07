@@ -28,10 +28,9 @@ habits: {
 
 * An object containing the current habits that must be completed today.
 * Each habit contains a `timesRemainingToday`, which starts at the `timesPerDay` value from the `habit` state.
-* The state is identified by a `STATUS.ACTIVE` constant.
 
 ```javascript
-[STATUS.ACTIVE]: {
+active: {
   '0': {
     timesRemainingToday: 1,
   },
@@ -42,17 +41,16 @@ habits: {
 
 * An object containing all the habits that have either been completed or failed.
 * Each habit contains a `completed` property, which holds an array containing booleans on if the habit was successfully completed each time it was active.
-* The state is identified by a `STATUS.HISTORY` constant.
 
 ```javascript
-[STATUS.HISTORY]: {
+history: {
   '0': {
     completed: [true, true, false, true],
   },
 }
 ```
 
-# Functions
+# Public Methods
 
 `add({ title, frequency, timesPerDay })`
 
@@ -71,11 +69,23 @@ habits: {
 
 * Returns the history of a single habit based on the `id`.
 
-`getIterable({ filter })`
+`getActiveIterable()`
+`GetHabitsIterable()`
+`getHistoryIterable()`
 
-* Uses the `filter` to return all the information about the habits.
+* All three of these expose a method to the consumer that returns an array of habits.
 
 `updateActive()`
 
 * Updates the `active` habits to the current days habits.
 * If any habits are still in the `active` list before the update, the habits are added to the history as incomplete.
+
+# Private Variables and Functions
+
+`_newHabitId`
+
+* An auto-incrementing integer that holds the value for the next new habit that is created.
+
+`_iterableFromIds(ids, state)`
+
+* A function that takes an object's keys, or `ids`, and a `state` and converts the state to an array.
