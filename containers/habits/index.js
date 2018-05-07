@@ -1,11 +1,7 @@
 import { Container } from 'unstated';
+import { FILTERS, STATUS } from './constants';
 
 let habitId = 0;
-const STATUS = {
-  ACTIVE: 'active',
-  INACTIVE: 'inactive',
-  COMPLETED: 'completed',
-};
 
 class HabitsContainer extends Container {
   constructor(props = {}) {
