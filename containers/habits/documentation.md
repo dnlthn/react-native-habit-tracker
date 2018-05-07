@@ -50,7 +50,7 @@ history: {
 }
 ```
 
-# Functions
+# Public Methods
 
 `add({ title, frequency, timesPerDay })`
 
@@ -69,11 +69,23 @@ history: {
 
 * Returns the history of a single habit based on the `id`.
 
-`getIterable({ filter })`
+`getActiveIterable()`
+`GetHabitsIterable()`
+`getHistoryIterable()`
 
-* Uses the `filter` to return all the information about the habits.
+* All three of these expose a method to the consumer that returns an array of habits.
 
 `updateActive()`
 
 * Updates the `active` habits to the current days habits.
 * If any habits are still in the `active` list before the update, the habits are added to the history as incomplete.
+
+# Private Variables and Functions
+
+`_newHabitId`
+
+* An auto-incrementing integer that holds the value for the next new habit that is created.
+
+`_iterableFromIds(ids, state)`
+
+* A function that takes an object's keys, or `ids`, and a `state` and converts the state to an array.
