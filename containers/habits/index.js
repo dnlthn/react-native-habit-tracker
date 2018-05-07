@@ -132,9 +132,27 @@ class HabitsContainer extends Container {
   };
 
   updateActive = () => {
-    const nextState = { ...this.state.habits };
+    const nextHistoryState = Object.keys(this.state[STATUS.ACTIVE]).reduce(
+      (history, id) => ({
+        ...history,
+        [id]: {
+          completed: history[id] ? [...history[id].completed, false] : [false],
+        },
+      }),
+      this.state.history,
+    );
 
-    this.setState({ active: nextState });
+    const nextActiveState = this.getIterable({ filter: 'habits' }).reduce(
+      (habits, { id, timesPerDay }) => ({
+        ...habits,
+        [id]: {
+          timesRemainingToday: timesPerDay,
+        },
+      }),
+      {},
+    );
+
+    this.setState({ active: nextActiveState, history: nextHistoryState });
   };
 }
 
