@@ -69,7 +69,18 @@ class HabitsContainer extends Container {
     const habit = this.state.active[id];
     const timesRemainingToday = habit.timesRemainingToday - 1;
 
-    if (timesRemainingToday === 0) {
+    if (timesRemainingToday > 0) {
+      const nextState = {
+        ...this.state.active,
+
+        [id]: {
+          ...habit,
+          timesRemainingToday,
+        },
+      };
+
+      this.setState({ active: nextState });
+    } else {
       const {
         [String(id)]: _removedActive,
         ...nextActiveState
@@ -90,17 +101,6 @@ class HabitsContainer extends Container {
         active: nextActiveState,
         history: nextHistoryState,
       });
-    } else {
-      const nextState = {
-        ...this.state.active,
-
-        [id]: {
-          ...habit,
-          timesRemainingToday,
-        },
-      };
-
-      this.setState({ active: nextState });
     }
   };
 
