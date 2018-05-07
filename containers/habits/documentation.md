@@ -28,10 +28,9 @@ habits: {
 
 * An object containing the current habits that must be completed today.
 * Each habit contains a `timesRemainingToday`, which starts at the `timesPerDay` value from the `habit` state.
-* The state is identified by a `STATUS.ACTIVE` constant.
 
 ```javascript
-[STATUS.ACTIVE]: {
+active: {
   '0': {
     timesRemainingToday: 1,
   },
@@ -42,10 +41,9 @@ habits: {
 
 * An object containing all the habits that have either been completed or failed.
 * Each habit contains a `completed` property, which holds an array containing booleans on if the habit was successfully completed each time it was active.
-* The state is identified by a `STATUS.HISTORY` constant.
 
 ```javascript
-[STATUS.HISTORY]: {
+history: {
   '0': {
     completed: [true, true, false, true],
   },
