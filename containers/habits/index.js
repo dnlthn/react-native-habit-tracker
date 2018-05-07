@@ -1,7 +1,7 @@
 import { Container } from 'unstated';
 import { FILTERS, STATUS } from './constants';
 
-let habitId = 0;
+let _newHabitId = 0;
 
 class HabitsContainer extends Container {
   constructor(props = {}) {
@@ -9,6 +9,8 @@ class HabitsContainer extends Container {
 
     this.state = {
       habits: props.habits || {},
+      [FILTERS.ACTIVE]: props[FILTERS.ACTIVE] || {},
+      [FILTERS.HISTORY]: props[FILTERS.HISTORY] || {},
     };
   }
 
@@ -16,17 +18,27 @@ class HabitsContainer extends Container {
     const nextState = {
       ...this.state.habits,
 
-      [habitId]: {
+      [_newHabitId]: {
         frequency,
-        status: STATUS.ACTIVE,
         timesPerDay,
-        timesRemainingToday: timesPerDay,
         title,
       },
     };
-    habitId = habitId + 1;
 
-    this.setState({ habits: nextState });
+    const nextActiveState = {
+      ...this.state[FILTERS.ACTIVE],
+
+      [_newHabitId]: {
+        timesRemainingToday: timesPerDay,
+      },
+    };
+
+    _newHabitId = _newHabitId + 1;
+
+    this.setState({
+      habits: nextState,
+      [FILTERS.ACTIVE]: nextActiveState,
+    });
   };
 
   remove = id => {
