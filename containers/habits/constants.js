@@ -15,6 +15,5 @@ export const DAYS = {
 
 export const STATUS = {
   ACTIVE: 'active',
-  INACTIVE: 'inactive',
-  COMPLETED: 'completed',
+  HISTORY: 'history',
 };

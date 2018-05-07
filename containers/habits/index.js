@@ -1,5 +1,5 @@
 import { Container } from 'unstated';
-import { FILTERS, STATUS } from './constants';
+import { STATUS } from './constants';
 
 let _newHabitId = 0;
 
@@ -9,13 +9,13 @@ class HabitsContainer extends Container {
 
     this.state = {
       habits: props.habits || {},
-      [FILTERS.ACTIVE]: props[FILTERS.ACTIVE] || {},
-      [FILTERS.HISTORY]: props[FILTERS.HISTORY] || {},
+      [STATUS.ACTIVE]: props[STATUS.ACTIVE] || {},
+      [STATUS.HISTORY]: props[STATUS.HISTORY] || {},
     };
   }
 
   add = ({ title, frequency, timesPerDay }) => {
-    const nextState = {
+    const nextHabitState = {
       ...this.state.habits,
 
       [_newHabitId]: {
@@ -26,7 +26,7 @@ class HabitsContainer extends Container {
     };
 
     const nextActiveState = {
-      ...this.state[FILTERS.ACTIVE],
+      ...this.state[STATUS.ACTIVE],
 
       [_newHabitId]: {
         timesRemainingToday: timesPerDay,
@@ -36,45 +36,61 @@ class HabitsContainer extends Container {
     _newHabitId = _newHabitId + 1;
 
     this.setState({
-      habits: nextState,
-      [FILTERS.ACTIVE]: nextActiveState,
+      habits: nextHabitState,
+      [STATUS.ACTIVE]: nextActiveState,
     });
   };
 
   remove = id => {
-    const { [String(id)]: _, ...nextState } = this.state.habits;
+    const {
+      [String(id)]: _removedHabit,
+      ...nextHabitState
+    } = this.state.habits;
 
-    this.setState({ habits: nextState });
+    const { [String(id)]: _removedActive, ...nextActiveState } = this.state[
+      STATUS.ACTIVE
+    ];
+
+    const { [String(id)]: _removedHistory, ...nextHistoryState } = this.state[
+      STATUS.HISTORY
+    ];
+
+    this.setState({
+      habits: nextHabitState,
+      [STATUS.ACTIVE]: nextActiveState,
+      [STATUS.HISTORY]: nextHistoryState,
+    });
   };
 
   perform = id => {
-    if (!this.state[FILTERS.ACTIVE][id]) return;
+    if (!this.state[STATUS.ACTIVE][id]) return;
 
-    const habit = this.state[FILTERS.ACTIVE][id];
+    const habit = this.state[STATUS.ACTIVE][id];
     const timesRemainingToday = habit.timesRemainingToday - 1;
 
     if (timesRemainingToday === 0) {
-      const { [String(id)]: _, ...nextActiveState } = this.state[
-        FILTERS.ACTIVE
+      const { [String(id)]: _removedActive, ...nextActiveState } = this.state[
+        STATUS.ACTIVE
       ];
 
-      const habit_history = this.state[FILTERS.HISTORY][id];
+      const habit_history = this.state[STATUS.HISTORY][id];
       const nextHistoryState = {
-        ...this.state[FILTERS.HISTORY],
+        ...this.state[STATUS.HISTORY],
 
         [id]: {
-          ...habit_history,
-          timesCompleted: habit_history ? habit_history.timesCompleted + 1 : 1,
+          completed: habit_history
+            ? [...habit_history.completed, true]
+            : [true],
         },
       };
 
       this.setState({
-        [FILTERS.ACTIVE]: nextActiveState,
-        [FILTERS.HISTORY]: nextHistoryState,
+        [STATUS.ACTIVE]: nextActiveState,
+        [STATUS.HISTORY]: nextHistoryState,
       });
     } else {
       const nextState = {
-        ...this.state[FILTERS.ACTIVE],
+        ...this.state[STATUS.ACTIVE],
 
         [id]: {
           ...habit,
@@ -82,22 +98,25 @@ class HabitsContainer extends Container {
         },
       };
 
-      this.setState({ [FILTERS.ACTIVE]: nextState });
+      this.setState({ [STATUS.ACTIVE]: nextState });
     }
   };
+
+  getHistory = id =>
+    this.state.history[id] ? this.state.history[id].completed : [];
 
   getIterable = ({ filter }) => {
     const filterProperties = id => {
       switch (filter) {
-        case FILTERS.ACTIVE:
+        case STATUS.ACTIVE:
           return {
-            timesRemainingToday: this.state[FILTERS.ACTIVE][id]
+            timesRemainingToday: this.state[STATUS.ACTIVE][id]
               .timesRemainingToday,
           };
 
-        case FILTERS.HISTORY:
+        case STATUS.HISTORY:
           return {
-            timesCompleted: this.state[FILTERS.HISTORY][id].timesCompleted,
+            completed: this.state[STATUS.HISTORY][id].completed,
           };
 
         default:
