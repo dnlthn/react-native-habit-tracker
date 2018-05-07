@@ -16,7 +16,7 @@ class HabitsContainer extends Container {
     };
   }
 
-  addHabit = ({ title, frequency, timesPerDay }) => {
+  add = ({ title, frequency, timesPerDay }) => {
     const nextState = {
       ...this.state.habits,
 
@@ -33,14 +33,14 @@ class HabitsContainer extends Container {
     this.setState({ habits: nextState });
   };
 
-  removeHabit = id => {
+  remove = id => {
     const { [String(id)]: _, ...nextState } = this.state.habits;
 
     this.setState({ habits: nextState });
   };
 
-  performHabit = id => {
     const habit = this.state.habits[id];
+  perform = id => {
     const timesRemainingToday = habit.timesRemainingToday - 1;
 
     const nextState = {

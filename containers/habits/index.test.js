@@ -6,7 +6,6 @@ import HabitsContainer from './index';
 const generateHabits = numberOfHabits => {
   const baseHabit = {
     frequency: 'DAILY',
-    status: STATUS.ACTIVE,
     timesPerDay: 1,
   };
 
@@ -40,14 +39,14 @@ it('returns the correct initial value', () => {
   expect(habits).toMatchObject(generatedHabits);
 });
 
-it('adds a new habit with the addHabit function when there are not any habits', done => {
+it('adds a new habit with the add function when there are not any habits', done => {
   const habitsContainer = new HabitsContainer();
   const newHabit = {
     frequency: 'DAILY',
     timesPerDay: 1,
     title: 'First Habit!',
   };
-  habitsContainer.addHabit(newHabit);
+  habitsContainer.add(newHabit);
 
   defer(() => {
     const { habits } = habitsContainer.state;
@@ -58,17 +57,17 @@ it('adds a new habit with the addHabit function when there are not any habits', 
   });
 });
 
-it('adds a new habit with the addHabit function when there is more than 1 habit', done => {
+it('adds a new habit with the add function when there is more than 1 habit', done => {
   const habitsContainer = new HabitsContainer();
   const newHabit = {
     frequency: 'DAILY',
     timesPerDay: 1,
     title: 'First Habit!',
   };
-  habitsContainer.addHabit(newHabit);
+  habitsContainer.add(newHabit);
 
   defer(() => {
-    habitsContainer.addHabit(newHabit);
+    habitsContainer.add(newHabit);
     defer(() => {
       const { habits } = habitsContainer.state;
       const numberOfHabits = Object.keys(habits).length;
@@ -82,7 +81,7 @@ it('adds a new habit with the addHabit function when there is more than 1 habit'
 it('removes the habit when only 1 exists', done => {
   const habitsContainer = new HabitsContainer({ habits: generateHabits(1) });
 
-  habitsContainer.removeHabit(0);
+  habitsContainer.remove(0);
   defer(() => {
     const { habits } = habitsContainer.state;
     const numberOfHabits = Object.keys(habits).length;
@@ -96,7 +95,7 @@ it('removes the habit when only 1 exists', done => {
 it('remove a habit when there is more than 1', done => {
   const habitsContainer = new HabitsContainer({ habits: generateHabits(3) });
 
-  habitsContainer.removeHabit(1);
+  habitsContainer.remove(1);
   defer(() => {
     const { habits } = habitsContainer.state;
     const numberOfHabits = Object.keys(habits).length;
@@ -111,7 +110,7 @@ it('updates the status to completed with the habit no longer needs to be perform
   const habitsContainer = new HabitsContainer({ habits: generateHabits(3) });
 
   const targetHabit = 2;
-  habitsContainer.performHabit(targetHabit);
+  habitsContainer.perform(targetHabit);
   defer(() => {
     const { habits } = habitsContainer.state;
     const { timesRemainingToday, status } = habits[targetHabit];
@@ -126,7 +125,7 @@ it('updates the status to completed with the habit no longer needs to be perform
   const habitsContainer = new HabitsContainer({ habits: generateHabits(3) });
 
   const targetHabit = 1;
-  habitsContainer.performHabit(targetHabit);
+  habitsContainer.perform(targetHabit);
   defer(() => {
     const { habits } = habitsContainer.state;
     const { status } = habits[targetHabit];
