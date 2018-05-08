@@ -45,7 +45,7 @@ class Habit extends Component {
                   <SubtitleText>
                     {streak > 0
                       ? `You are on a streak of ${streak}!`
-                      : 'Complete this task to start a new streak!'}
+                      : 'Complete this task to start a streak!'}
                   </SubtitleText>
                 </HabitWrapper>
               </Row>
@@ -196,8 +196,8 @@ const TitleText = styled.Text`
 `;
 
 const SubtitleText = styled.Text`
-  color: #6574cd;
-  font-weight: 800;
+  color: #979ab4;
+  font-weight: 600;
   font-size: 14px;
 `;
 
