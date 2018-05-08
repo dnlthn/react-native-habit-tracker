@@ -1,5 +1,7 @@
 import { Container } from 'unstated';
 
+import { DAYS } from '../../data/constants';
+
 const _iterableFromIds = (ids, state) =>
   Object.keys(ids).map(id => {
     const timesRemainingToday = state.active[id]
@@ -24,6 +26,7 @@ class HabitsContainer extends Container {
       active: props.active || {},
       history: props.history || {},
       newHabitId: props.newHabitId || 0,
+      currentDay: Object.values(DAYS)[new Date().getDay()],
     };
   }
 
@@ -38,13 +41,19 @@ class HabitsContainer extends Container {
       },
     });
 
-    const nextActiveState = state => ({
-      ...state.active,
+    const nextActiveState = state => {
+      const today = Object.values(DAYS)[new Date().getDay()];
 
-      [state.newHabitId]: {
-        timesRemainingToday: timesPerDay,
-      },
-    });
+      return frequency.includes(today)
+        ? {
+            ...state.active,
+
+            [state.newHabitId]: {
+              timesRemainingToday: timesPerDay,
+            },
+          }
+        : state.active;
+    };
 
     this.setState(state => ({
       habits: nextHabitState(state),
@@ -111,6 +120,17 @@ class HabitsContainer extends Container {
   getActiveIterable = () => _iterableFromIds(this.state.active, this.state);
   getHabitsIterable = () => _iterableFromIds(this.state.habits, this.state);
   getHistoryIterable = () => _iterableFromIds(this.state.history, this.state);
+  getStreak = id => {
+    if (!this.state.history[id]) return 0;
+
+    const streak = [...this.state.history[id].completed]
+      .reverse()
+      .indexOf(false);
+    const streakLength =
+      streak >= 0 ? streak : this.state.history[id].completed.length;
+
+    return streakLength;
+  };
 
   updateActive = () => {
     const nextHistoryState = state =>
@@ -128,12 +148,18 @@ class HabitsContainer extends Container {
 
     const nextActiveState = () =>
       this.getHabitsIterable().reduce(
-        (habits, { id, timesPerDay }) => ({
-          ...habits,
-          [id]: {
-            timesRemainingToday: timesPerDay,
-          },
-        }),
+        (habits, { id, timesPerDay, frequency }) => {
+          const today = Object.values(DAYS)[new Date().getDay()];
+
+          return frequency.includes(today)
+            ? {
+                ...habits,
+                [id]: {
+                  timesRemainingToday: timesPerDay,
+                },
+              }
+            : habits;
+        },
         {},
       );
 
@@ -141,6 +167,17 @@ class HabitsContainer extends Container {
       active: nextActiveState(),
       history: nextHistoryState(state),
     }));
+  };
+
+  updateDay = () => {
+    const today = Object.values(DAYS)[new Date().getDay()];
+
+    if (this.state.currentDay !== today) {
+      this.setState({
+        currentDay: today,
+      });
+      this.updateActive();
+    }
   };
 }
 
