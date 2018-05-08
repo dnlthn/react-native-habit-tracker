@@ -9,6 +9,7 @@ import CreateHabitContainer from '../../containers/create-habit';
 
 import SubmitButton from './submit';
 import DayPicker from './day-picker';
+import FrequencySlider from './frequency-slider';
 
 const CreateHabitForm = ({ open, toggle }) => (
   <Fragment>
@@ -47,18 +48,10 @@ const CreateHabitForm = ({ open, toggle }) => (
               <Input value={title} onChangeText={updateTitle} />
 
               <Label>HOW OFTEN EACH DAY?</Label>
-              <SliderWrapper>
-                <SliderCount>{String(timesPerDay)}</SliderCount>
-                <Slider
-                  minimumTrackTintColor="#feca57"
-                  maximumTrackTintColor="#f0f1f4"
-                  style={{ flex: 1 }}
-                  step={1}
-                  maximumValue={10}
-                  value={timesPerDay}
-                  onValueChange={updateTimesPerDay}
-                />
-              </SliderWrapper>
+              <FrequencySlider
+                timesPerDay={timesPerDay}
+                updateTimesPerDay={updateTimesPerDay}
+              />
 
               <Label>WHEN?</Label>
               <DayPicker frequency={frequency} toggleDay={toggleDay} />
@@ -81,18 +74,6 @@ const CreateHabitForm = ({ open, toggle }) => (
 );
 
 export default CreateHabitForm;
-
-const SliderWrapper = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-const SliderCount = styled.Text`
-  font-size: 24px;
-  margin-horizontal: 20px;
-  color: #20212c;
-  font-weight: 200;
-`;
 
 const AddIcon = styled.Image`
   height: 30px;
