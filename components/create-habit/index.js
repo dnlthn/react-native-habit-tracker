@@ -7,124 +7,80 @@ import { Subscribe } from 'unstated';
 import HabitsContainer from '../../containers/habits';
 import CreateHabitContainer from '../../containers/create-habit';
 
-import { DAYS } from '../../data/constants';
+import SubmitButton from './submit';
+import DayPicker from './day-picker';
 
 const CreateHabitForm = ({ open, toggle }) => (
-  <CreateHabitContainer>
-    {({
-      title,
-      timesPerDay,
-      frequency,
-      updateTitle,
-      updateTimesPerDay,
-      reset,
-      toggleDay,
-    }) => (
-      <Container open={open}>
-        <HeadingWrapper open={open}>
-          <HeadingText open={open}>Create a Habit</HeadingText>
-          {open ? (
-            <TouchableOpacity onPress={toggle}>
-              <AddIcon
-                open={open}
-                source={require('../../images/icons/close.png')}
-              />
-            </TouchableOpacity>
-          ) : (
+  <Fragment>
+    <FormWrapper open={open}>
+      {/* Input and Header - open, toggle */}
+      <HeadingWrapper open={open}>
+        <HeadingText open={open}>Create a Habit</HeadingText>
+        {open ? (
+          <TouchableOpacity onPress={toggle}>
             <AddIcon
               open={open}
-              source={require('../../images/icons/plus.png')}
+              source={require('../../images/icons/close.png')}
             />
-          )}
-        </HeadingWrapper>
-
-        {open && (
-          <Fragment>
-            <Label>WHAT DO YOU WANT TO DO?</Label>
-            <Input value={title} onChangeText={updateTitle} />
-
-            <Label>HOW OFTEN EACH DAY?</Label>
-            <SliderWrapper>
-              <SliderCount>{String(timesPerDay)}</SliderCount>
-              <Slider
-                minimumTrackTintColor="#feca57"
-                maximumTrackTintColor="#f0f1f4"
-                style={{ flex: 1 }}
-                step={1}
-                maximumValue={10}
-                value={timesPerDay}
-                onValueChange={updateTimesPerDay}
-              />
-            </SliderWrapper>
-
-            <Label>WHEN?</Label>
-            <DaysWrapper>
-              {Object.values(DAYS).map(day => (
-                <TouchableOpacity key={day} onPress={() => toggleDay(day)}>
-                  <DayButton selected={frequency.includes(day)}>
-                    <DayText>{day.toUpperCase()}</DayText>
-                  </DayButton>
-                </TouchableOpacity>
-              ))}
-            </DaysWrapper>
-
-            <Subscribe to={[HabitsContainer]}>
-              {habits => (
-                <TouchableOpacity
-                  onPress={() => {
-                    habits.add({ title, frequency, timesPerDay });
-                    reset();
-                    toggle();
-                  }}
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    marginTop: 15,
-                    backgroundColor: '#7a7d9f',
-                    borderRadius: 5,
-                    paddingVertical: 5,
-                  }}
-                >
-                  <AddText>Create</AddText>
-                </TouchableOpacity>
-              )}
-            </Subscribe>
-          </Fragment>
+          </TouchableOpacity>
+        ) : (
+          <AddIcon
+            open={open}
+            source={require('../../images/icons/plus.png')}
+          />
         )}
-      </Container>
-    )}
-  </CreateHabitContainer>
+      </HeadingWrapper>
+
+      {open && (
+        <CreateHabitContainer>
+          {({
+            title,
+            timesPerDay,
+            frequency,
+            updateTitle,
+            updateTimesPerDay,
+            toggleDay,
+            create,
+          }) => (
+            <Fragment>
+              <Label>WHAT DO YOU WANT TO DO?</Label>
+              <Input value={title} onChangeText={updateTitle} />
+
+              <Label>HOW OFTEN EACH DAY?</Label>
+              <SliderWrapper>
+                <SliderCount>{String(timesPerDay)}</SliderCount>
+                <Slider
+                  minimumTrackTintColor="#feca57"
+                  maximumTrackTintColor="#f0f1f4"
+                  style={{ flex: 1 }}
+                  step={1}
+                  maximumValue={10}
+                  value={timesPerDay}
+                  onValueChange={updateTimesPerDay}
+                />
+              </SliderWrapper>
+
+              <Label>WHEN?</Label>
+              <DayPicker frequency={frequency} toggleDay={toggleDay} />
+
+              <Subscribe to={[HabitsContainer]}>
+                {habits => (
+                  <SubmitButton
+                    create={create}
+                    habits={habits}
+                    toggle={toggle}
+                  />
+                )}
+              </Subscribe>
+            </Fragment>
+          )}
+        </CreateHabitContainer>
+      )}
+    </FormWrapper>
+  </Fragment>
 );
 
 export default CreateHabitForm;
-
-const AddText = styled.Text`
-  font-size: 16px;
-  font-weight: 400;
-  margin: 5px;
-  color: #f0f1f4;
-`;
-
-const DaysWrapper = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
-`;
-
-const DayButton = styled.View`
-  padding-horizontal: 10px;
-  padding-vertical: 10px;
-  align-items: center;
-  background-color: #f0f1f4;
-  margin: 5px;
-  border-radius: 5px;
-  background-color: ${({ selected }) => (selected ? '#fed780' : '#f0f1f4')};
-`;
-const DayText = styled.Text`
-  color: ${({ selected }) => (selected ? '#37394c' : '#0b0b0f')};
-  font-size: 14px;
-  letter-spacing: 0.75;
-`;
 
 const SliderWrapper = styled.View`
   flex-direction: row;
@@ -150,7 +106,7 @@ const AddIcon = styled.Image`
     `};
 `;
 
-const Container = styled.View`
+const FormWrapper = styled.View`
   margin-bottom: 5px;
   margin-horizontal: 10px;
   padding-horizontal: 15px;
