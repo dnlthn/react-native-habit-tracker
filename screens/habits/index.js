@@ -5,9 +5,13 @@ import styled from 'styled-components';
 
 import HabitsContainer from '../../containers/habits';
 import ToggleContainer from '../../containers/toggle';
+
 import ScreenLayout from '../../layouts';
-import Habit from '../../components/habit';
+
 import CreateHabitForm from '../../components/create-habit';
+import Habit from '../../components/habit';
+import UpdateHabits from '../../components/update-habits';
+
 import { DAYS } from '../../data/constants';
 
 const Habits = () => (
@@ -34,7 +38,7 @@ const Habits = () => (
 
       <Subscribe to={[HabitsContainer]}>
         {habits => (
-          <HabitsList updateDay={habits.updateDay}>
+          <UpdateHabits updateDay={habits.updateDay}>
             {habits
               .getActiveIterable()
               .map(habit => (
@@ -71,7 +75,7 @@ const Habits = () => (
                 </React.Fragment>
               )}
             </ToggleContainer>
-          </HabitsList>
+          </UpdateHabits>
         )}
       </Subscribe>
     </ScreenLayout>
@@ -79,8 +83,6 @@ const Habits = () => (
 );
 
 export default Habits;
-
-const HabitsList = styled.View``;
 
 const ScrollContainer = styled.ScrollView`
   background-color: #37394c;
