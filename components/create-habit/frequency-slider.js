@@ -6,13 +6,14 @@ const FrequencySlider = ({ timesPerDay, updateTimesPerDay }) => (
   <Wrapper>
     <Counter>{String(timesPerDay)}</Counter>
     <Slider
-      minimumTrackTintColor="#feca57"
       maximumTrackTintColor="#f0f1f4"
-      style={{ flex: 1 }}
-      step={1}
       maximumValue={10}
-      value={timesPerDay}
+      minimumTrackTintColor="#feca57"
+      minimumValue={1}
       onValueChange={updateTimesPerDay}
+      step={1}
+      style={{ flex: 1 }}
+      value={timesPerDay}
     />
   </Wrapper>
 );
