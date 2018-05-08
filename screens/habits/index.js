@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Subscribe } from 'unstated';
 import styled from 'styled-components';
@@ -54,7 +54,7 @@ const Habits = () => (
 
             <ToggleContainer>
               {({ on, toggle }) => (
-                <React.Fragment>
+                <Fragment>
                   <TouchableOpacity onPress={toggle}>
                     <SectionLabel>{on ? 'CLOSE' : 'VIEW'} ALL</SectionLabel>
                   </TouchableOpacity>
@@ -72,7 +72,7 @@ const Habits = () => (
                           viewAll
                         />
                       ))}
-                </React.Fragment>
+                </Fragment>
               )}
             </ToggleContainer>
           </UpdateHabits>
