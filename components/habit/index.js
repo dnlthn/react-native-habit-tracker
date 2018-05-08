@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 
 import ToggleContainer from '../../containers/toggle';
 import Information from './information';
+import CounterOrIcon from './counter-icon';
 
 class Habit extends Component {
   render() {
@@ -26,20 +27,12 @@ class Habit extends Component {
           <TouchableOpacity onPress={toggle}>
             <Card>
               <Row open={on}>
-                {/*  viewAll, perform, timesRemainingToday */}
-                <Left viewAll={viewAll}>
-                  {viewAll ? (
-                    <Icon
-                      source={require('../../images/icons/lightning.png')}
-                    />
-                  ) : (
-                    <TouchableOpacity onPress={() => perform(id)}>
-                      <CountButton>
-                        <CountText>{timesRemainingToday}</CountText>
-                      </CountButton>
-                    </TouchableOpacity>
-                  )}
-                </Left>
+                <CounterOrIcon
+                  id={id}
+                  perform={perform}
+                  timesRemainingToday={timesRemainingToday}
+                  viewAll={viewAll}
+                />
 
                 {/*  title, streak */}
                 <HabitWrapper>
@@ -54,11 +47,11 @@ class Habit extends Component {
 
               {on && (
                 <Information
-                  history={history}
                   frequency={frequency}
-                  timesPerDay={timesPerDay}
-                  remove={remove}
+                  history={history}
                   id={id}
+                  remove={remove}
+                  timesPerDay={timesPerDay}
                 />
               )}
             </Card>
@@ -70,33 +63,6 @@ class Habit extends Component {
 }
 
 export default Habit;
-
-const Icon = styled.Image`
-  height: 40px;
-  width: 40px;
-`;
-
-const Left = styled.View`
-  padding: 10px;
-  width: 75px;
-  background-color: ${({ viewAll }) => (viewAll ? 'white' : '#f0f1f4')};
-  align-items: center;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  justify-content: center;
-`;
-
-const CountButton = styled.View`
-  border-radius: 5px;
-  padding: 10px;
-  background-color: #fed780;
-`;
-
-const CountText = styled.Text`
-  font-size: 24px;
-  font-weight: 600;
-  color: #20212c;
-`;
 
 const Card = styled.View`
   background-color: white;
