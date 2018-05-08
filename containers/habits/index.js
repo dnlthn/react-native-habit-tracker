@@ -1,6 +1,5 @@
 import { Container } from 'unstated';
 
-let _newHabitId = 0;
 const _iterableFromIds = (ids, state) =>
   Object.keys(ids).map(id => {
     const timesRemainingToday = state.active[id]
@@ -24,98 +23,86 @@ class HabitsContainer extends Container {
       habits: props.habits || {},
       active: props.active || {},
       history: props.history || {},
+      newHabitId: props.newHabitId || 0,
     };
   }
 
   add = ({ title, frequency, timesPerDay }) => {
-    const nextHabitState = {
-      ...this.state.habits,
+    const nextHabitState = state => ({
+      ...state.habits,
 
-      [_newHabitId]: {
+      [state.newHabitId]: {
         frequency,
         timesPerDay,
         title,
       },
-    };
+    });
 
-    const nextActiveState = {
-      ...this.state.active,
+    const nextActiveState = state => ({
+      ...state.active,
 
-      [_newHabitId]: {
+      [state.newHabitId]: {
         timesRemainingToday: timesPerDay,
       },
-    };
-
-    _newHabitId = _newHabitId + 1;
-
-    this.setState({
-      habits: nextHabitState,
-      active: nextActiveState,
     });
+
+    this.setState(state => ({
+      habits: nextHabitState(state),
+      active: nextActiveState(state),
+      newHabitId: state.newHabitId + 1,
+    }));
   };
 
   remove = id => {
-    const {
-      [String(id)]: _removedHabit,
-      ...nextHabitState
-    } = this.state.habits;
+    const stateAfterRemoval = state => {
+      const { [String(id)]: _removed, ...nextState } = state;
+      return nextState;
+    };
 
-    const {
-      [String(id)]: _removedActive,
-      ...nextActiveState
-    } = this.state.active;
-
-    const {
-      [String(id)]: _removedHistory,
-      ...nextHistoryState
-    } = this.state.history;
-
-    this.setState({
-      habits: nextHabitState,
-      active: nextActiveState,
-      history: nextHistoryState,
-    });
+    this.setState(state => ({
+      habits: stateAfterRemoval(state.habits),
+      active: stateAfterRemoval(state.active),
+      history: stateAfterRemoval(state.history),
+    }));
   };
 
   perform = id => {
-    if (!this.state.active[id]) return;
+    const isCompleted = state => state[id].timesRemainingToday - 1 === 0;
 
-    const habit = this.state.active[id];
-    const timesRemainingToday = habit.timesRemainingToday - 1;
+    const nextActiveState = state => {
+      const habit = state[id];
+      const timesRemainingToday = habit.timesRemainingToday - 1;
 
-    if (timesRemainingToday > 0) {
-      const nextState = {
-        ...this.state.active,
+      if (timesRemainingToday > 0) {
+        return {
+          ...state,
 
-        [id]: {
-          ...habit,
-          timesRemainingToday,
-        },
-      };
+          [id]: {
+            ...habit,
+            timesRemainingToday,
+          },
+        };
+      } else {
+        const { [String(id)]: _removed, ...nextState } = state;
 
-      this.setState({ active: nextState });
-    } else {
-      const {
-        [String(id)]: _removedActive,
-        ...nextActiveState
-      } = this.state.active;
+        return nextState;
+      }
+    };
 
-      const habit_history = this.state.history[id];
-      const nextHistoryState = {
-        ...this.state.history,
+    const nextHistoryState = state => ({
+      ...state,
 
-        [id]: {
-          completed: habit_history
-            ? [...habit_history.completed, true]
-            : [true],
-        },
-      };
+      [id]: {
+        completed: state[id] ? [...state[id].completed, true] : [true],
+      },
+    });
 
-      this.setState({
-        active: nextActiveState,
-        history: nextHistoryState,
-      });
-    }
+    this.setState(state => ({
+      active: nextActiveState(state.active),
+      history: isCompleted(state.active)
+        ? nextHistoryState(state.history)
+        : state.history,
+    }));
   };
 
   getHistory = id =>
@@ -126,27 +113,34 @@ class HabitsContainer extends Container {
   getHistoryIterable = () => _iterableFromIds(this.state.history, this.state);
 
   updateActive = () => {
-    const nextHistoryState = Object.keys(this.state.active).reduce(
-      (history, id) => ({
-        ...history,
-        [id]: {
-          completed: history[id] ? [...history[id].completed, false] : [false],
-        },
-      }),
-      this.state.history,
-    );
+    const nextHistoryState = state =>
+      Object.keys(state.active).reduce(
+        (history, id) => ({
+          ...history,
+          [id]: {
+            completed: history[id]
+              ? [...history[id].completed, false]
+              : [false],
+          },
+        }),
+        state.history,
+      );
 
-    const nextActiveState = this.getHabitsIterable().reduce(
-      (habits, { id, timesPerDay }) => ({
-        ...habits,
-        [id]: {
-          timesRemainingToday: timesPerDay,
-        },
-      }),
-      {},
-    );
+    const nextActiveState = () =>
+      this.getHabitsIterable().reduce(
+        (habits, { id, timesPerDay }) => ({
+          ...habits,
+          [id]: {
+            timesRemainingToday: timesPerDay,
+          },
+        }),
+        {},
+      );
 
-    this.setState({ active: nextActiveState, history: nextHistoryState });
+    this.setState(state => ({
+      active: nextActiveState(),
+      history: nextHistoryState(state),
+    }));
   };
 }
 
