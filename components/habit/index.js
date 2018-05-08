@@ -34,7 +34,6 @@ class Habit extends Component {
                   viewAll={viewAll}
                 />
 
-                {/*  title, streak */}
                 <HabitWrapper>
                   <TitleText>{title}</TitleText>
                   <SubtitleText>
@@ -85,11 +84,6 @@ const Row = styled.View`
       border-bottom-width: 2px;
       border-color: #f0f1f4;
     `};
-`;
-
-const CheckIcon = styled.Image`
-  width: 35;
-  height: 35;
 `;
 
 const HabitWrapper = styled.View`
