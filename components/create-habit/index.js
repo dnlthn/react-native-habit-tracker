@@ -19,16 +19,13 @@ const CreateHabitForm = ({ open, toggle }) => (
         <HeadingText open={open}>Create a Habit</HeadingText>
         {open ? (
           <TouchableOpacity onPress={toggle}>
-            <AddIcon
+            <Icon
               open={open}
               source={require('../../images/icons/close.png')}
             />
           </TouchableOpacity>
         ) : (
-          <AddIcon
-            open={open}
-            source={require('../../images/icons/plus.png')}
-          />
+          <Icon open={open} source={require('../../images/icons/plus.png')} />
         )}
       </HeadingWrapper>
 
@@ -75,7 +72,7 @@ const CreateHabitForm = ({ open, toggle }) => (
 
 export default CreateHabitForm;
 
-const AddIcon = styled.Image`
+const Icon = styled.Image`
   height: 30px;
   width: 30px;
 
