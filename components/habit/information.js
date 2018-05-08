@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View } from 'react-native';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { DAYS } from '../../data/constants';
 
