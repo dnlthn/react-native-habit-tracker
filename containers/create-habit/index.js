@@ -1,6 +1,4 @@
 import React, { Fragment, Component } from 'react';
-import { Subscribe } from 'unstated';
-import HabitsContainer from '../../containers/habits';
 
 export default class CreateHabit extends Component {
   state = {
@@ -46,7 +44,6 @@ export default class CreateHabit extends Component {
           addHabit: this.addHabit,
           create: this.create,
           frequency: this.state.frequency,
-          reset: this.reset,
           timesPerDay: this.state.timesPerDay,
           title: this.state.title,
           toggleDay: this.toggleDay,
