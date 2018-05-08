@@ -1,20 +1,11 @@
 import React from 'react';
-
-import { TabNavigator } from 'react-navigation';
-import HabitScreen from './screens/habits';
-import HistoryScreen from './screens/history';
-
 import { Provider } from 'unstated';
-// import CounterContainer from './containers/counter'
 
-const TabComponent = TabNavigator({
-  Habits: { screen: HabitScreen },
-  History: { screen: HistoryScreen }
-});
+import HabitScreen from './screens/habits';
 
 const App = () => (
   <Provider>
-    <TabComponent />
+    <HabitScreen />
   </Provider>
 );
 
