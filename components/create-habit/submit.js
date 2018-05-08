@@ -18,13 +18,13 @@ const SubmitButton = ({ create, habits, toggle }) => (
       paddingVertical: 5,
     }}
   >
-    <AddText>Create</AddText>
+    <Label>Create</Label>
   </TouchableOpacity>
 );
 
 export default SubmitButton;
 
-const AddText = styled.Text`
+const Label = styled.Text`
   font-size: 16px;
   font-weight: 400;
   margin: 5px;
