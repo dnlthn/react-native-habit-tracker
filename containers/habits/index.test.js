@@ -1,6 +1,6 @@
 import defer from 'tickedoff';
 
-import { DAYS } from './constants';
+import { DAYS } from '../../data/constants';
 import HabitsContainer from './index';
 
 const generateHabits = numberOfHabits => {
